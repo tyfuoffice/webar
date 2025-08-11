@@ -1,0 +1,37 @@
+
+<html>
+  <head>
+    <title>mindar</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="multicore_logo.ico" sizes="32x32">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <style>body { margin: 0; overflow: hidden; }</style>
+  </head>
+  <body>
+
+    <div id="vr1" style="width:50px; height:50px; position:fixed; top:0px; left:0px;background-color: rgba(255, 255, 255, 0.3);  font-size: 12px; padding:0px;  text-justify: auto;    text-align: center; margin: 0px; z-index: 10;">
+    </div>
+    <a-scene>
+      <a-assets>
+        <img id="sky360" src="panovr.jpg">
+      </a-assets>
+
+      <!-- 調整 sky 讓貼圖中心 = 天頂 -->
+      <a-sky src="#sky360" look-controls="enabled: false;" rotation="0 0 0"></a-sky>
+
+      <!-- 手機方向控制，預設啟用 -->
+      <a-camera look-controls="enabled: true;" wasd-controls="enabled: false" position="0 0 0"></a-camera>
+    </a-scene>
+
+    <script>
+      $("#vr1").click(() => {
+        open("index.html");  
+      });
+    </script>
+  </body>
+</html>
+

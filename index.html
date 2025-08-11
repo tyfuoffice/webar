@@ -1,0 +1,104 @@
+
+<html>
+  <head>
+    <title>mindar</title>
+	  <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="multicore_logo.ico" sizes="32x32">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+  </head>
+  <body style="padding:0px; margin: 0px"> 
+
+    <div id="vr1" style="width:50px; height:50px; position:fixed; top:0px; left:0px;background-color: rgba(255, 255, 255, 0.3);  font-size: 12px; padding:0px;  text-justify: auto;    text-align: center; margin: 0px; z-index: 10;">
+    </div>
+
+    <div id="dwn1" style="width:100vw; height:100vh; background-color: bisque;  font-size: 36px; padding:0px;  text-justify: auto;    text-align: center; margin: 0px;">
+      下載中！
+    </div>
+
+    <a-scene mindar-image="imageTargetSrc: ./targets.mind; maxTrack: 1; uiScanning: false" renderer="physicallyCorrectLights: true" embedded vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+      <a-assets id="assets-container">
+        <img id="domeTexture" src="pano.jpg">
+      </a-assets>
+
+      <a-entity light="type: ambient; intensity: 3"></a-entity>
+      <a-entity light="type: directional; intensity: 0" position="0 0 0"></a-entity>
+      <a-camera id="mainCam" position="0 0 0" look-controls="enabled: false;" wasd-controls="enabled: false"></a-camera>
+
+
+      <a-entity mindar-image-target="targetIndex: 0"> 
+        <a-entity
+          geometry="primitive: sphere; radius: 0.55; thetaStart: 0; thetaLength: 90"
+          material="src: #domeTexture; side: top; transparent: false"
+          position="0 0 -0.1"
+          rotation="90 0 0">
+        </a-entity>
+      </a-entity>
+
+    </a-scene>
+
+    <script>
+      $("#vr1").click(() => {
+        open("dome.html");  
+      });
+    </script>
+
+    <script>
+      navigator.mediaDevices.enumerateDevices().then(devices => {
+        const videoDevices = devices.filter(device => device.kind === 'videoinput');
+        console.log("可用攝影機：", videoDevices);
+        videoDevices.forEach(device => {
+          console.log(device.label+": "+device.deviceId);
+        });
+
+        $("#dwn1").html("下載完成！<br>點擊畫面開始感應！");
+        $("#dwn1").click(()=>{
+          $("#dwn1").hide();
+        });
+
+      });
+
+      // mindarThree.start().then(() => {
+      //   const video = document.querySelector('video');
+      //   console.log('實際解析度:', video.videoWidth, 'x', video.videoHeight);
+      //   $("#dwn1").hide();
+      // });
+
+      const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+      const isAndroid = /Android/i.test(navigator.userAgent);
+
+      //alert("isIOS:"+isIOS+", isAndroid:"+isAndroid);
+
+      function detectPlatform() {
+        const ua = navigator.userAgent;
+
+        if (/android/i.test(ua)) {
+          return "Android 手機/平板";
+        }
+        if (/iPad|iPhone|iPod/.test(ua) || 
+            (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
+          return "iOS 裝置";
+        }
+        if (/Macintosh|Mac OS X/i.test(ua)) {
+          return "macOS 桌機/筆電";
+        }
+        if (/Windows/i.test(ua)) {
+          return "Windows 桌機/筆電";
+        }
+        return "無法判斷裝置";
+      }
+
+      // 顯示結果
+      const resultText = detectPlatform();
+      console.log(`偵測結果：${resultText}`);
+      //document.getElementById("result").textContent = `偵測結果：${resultText}`;
+      console.log("使用者裝置：", resultText);
+    </script>
+    
+  </body>
+</html>
+
+<!-- https://www.moc2718.com/domear/index.html -->
